@@ -1,4 +1,6 @@
 import java.util.*;
+import java.time.*;
+import java.time.format.*;
 
 public class GestorTareas{
 
@@ -37,7 +39,6 @@ public class GestorTareas{
             }
             tareasPendientes += "]";
         }
-
         return tareasPendientes;
     }    
 
@@ -248,7 +249,6 @@ public class GestorTareas{
         System.out.println(getTareasConElTexto(textoABuscar));
     }
 
-    
     /**
      * 21. Devuelve todas las tareas cada una en una linea; si no 
      * hay tareas devuelve la cadena vacia (usando un bucle while)
@@ -314,7 +314,7 @@ public class GestorTareas{
         }
         return hayTareaConTexto;
     }
-    
+
     /**
      * 26. Elimina la primera tarea que contiene el texto indicado por parámetro. Devuelve true
      * si elimino una tarea o false en caso contrario. Hay que hacerlo lo mas eficiente posible
@@ -333,9 +333,6 @@ public class GestorTareas{
         return tareaEliminada;        
     }     
 
-    
-    
-   
     /**
      * 27. Elimina todas las tareas que contienen un texto pasado como parametro. Devuelve
      * el numero de tareas eliminadas. Hay que hacerlo con un bucle while
@@ -353,8 +350,7 @@ public class GestorTareas{
         }
         return tareasBorradas;
     }
-    
-    
+
     /**
      * 28. Elimina todas las tareas que contienen un texto pasado como parametro. Devuelve
      * el numero de tareas eliminadas. Hay que hacerlo con un bucle for-each
@@ -370,9 +366,7 @@ public class GestorTareas{
         }
         return tareasBorradas;
     }
-    
-    
-    
+
     /**
      * 29. Marca como completada la tarea que ocupa la posicion indicada como parametro y devuelve
      * true si pudo realizar la operacion o false en caso contrario (se entiende que una tarea
@@ -391,8 +385,7 @@ public class GestorTareas{
         }
         return estaCompletada;
     }
-    
-    
+
     /**
      * 30. Devuelve todas las tareas, una en cada linea, indicando si esta pendiente con el texto "[ ]" o si no
      * esta pendiente con el texto "[x]" delante del texto de la tarea y luego un espacio
@@ -413,8 +406,7 @@ public class GestorTareas{
         }
         return listaTareasCompletadas;
     }
-    
-    
+
     /**
      * 31. Imprime por pantalla todas las tareas, una en cada linea, indicando si esta pendiente con el texto "[ ]" o si no
      * esta pendiente con el texto "[x]" delante del texto de la tarea y luego un espacio
@@ -424,8 +416,133 @@ public class GestorTareas{
     public void imprimeListaTareasCompletadasYNoCompletadas()  {
         System.out.println(getListaTareasCompletadasYNoCompletadas());
     }  
-     
-    
-    
-    
+
+    /**
+     * 32. Devuelve todas las tareas, una en cada linea, indicando si esta pendiente con el texto "[ ]" o si no
+     * esta pendiente con el texto "[x]" delante del texto de la tarea y luego un espacio
+     * (por ejemplo "1. [x] Hacer la cama"); además muestra la prioridad de la tarea al final de la linea
+     * separada por un espacio de la descripcion de la tarea; si no hay tareas devuelve la cadena vacia
+     */  
+    public String getListaTareasCompletadasYNoCompletadasConPrioridad() {
+        String listaTareasCompletadas = "";
+        int contador = 1;
+        for (Tarea tarea : tareas) {
+            String textoEstaCompletadaONo = "[ ] ";
+            if (tarea.estaCompletada()) {
+                textoEstaCompletadaONo = "[x] ";
+            }
+            listaTareasCompletadas += contador + ". " + textoEstaCompletadaONo + tarea.getNombreDeTarea() + " " + tarea.getPrioridad() + "\n";
+            contador++;
+        }
+        return listaTareasCompletadas;
+    }    
+
+    /**
+     * 33. Cambia la prioridad de la tarea que ocupa la posicion indicada segun el listado del
+     * metodo anterior al valor indicado . Si no es un valor legal para las prioridades (de 1 a 5) o no es
+     * una posicion valida, la prioridad se queda como esta
+     */
+    public void setPrioridad(int posicionTarea, int prioridad){
+        if ((posicionTarea >= 1) && (posicionTarea <= tareas.size())) {
+            if (prioridad > 0 && prioridad < 6) {
+                tareas.get(posicionTarea - 1).setPrioridad(prioridad);
+            }
+        }
+    }
+
+    /**
+     * 34. Devuelve todos los datos de la tarea con mayor prioridad. Si hay empate,
+     * devuelve la última encontrada. Si no hay tareas devuelve la cadena vacia
+     */
+    public String getTareaMasPrioritaria() {
+        String tareaMasPrioritaria = "";
+        if (!tareas.isEmpty()) {
+            int prioridad = 5;
+            for (Tarea tarea: tareas) {
+                if (tarea.getPrioridad() <= prioridad) {
+                    prioridad = tarea.getPrioridad();
+                    tareaMasPrioritaria = tarea.getNombreDeTarea();
+                }
+            }
+            tareaMasPrioritaria = "[ ] " + tareaMasPrioritaria + " " + prioridad;
+        }
+        return tareaMasPrioritaria;
+    }
+
+    /*public String getTareasPorPrioridad() {
+    ArrayList<Tarea> tareasTemp = new ArrayList<Tarea>(tareas);
+    String ArrayOrdenadoPorPrioridad = "";
+    int prioridadActual = 10;
+    int cont = 0;
+    Tarea temp = null;
+    while (cont < tareas.size()) {
+    int contTemp = 0;
+    int contElemento = 0;
+    for (Tarea tarea: tareasTemp) {
+    if (tarea.getPrioridad() < prioridadActual) {
+    prioridadActual = tarea.getPrioridad();
+    temp = tarea;
+    contElemento = contTemp;
+    }
+    contTemp++;
+    }
+    ArrayOrdenadoPorPrioridad += temp.getNombreDeTarea() + " " + temp.getPrioridad() +"\n";
+    tareasTemp.remove(contElemento);
+    cont++;
+    prioridadActual = 10;
+    temp = null;
+    }
+    return ArrayOrdenadoPorPrioridad;
+    }*/
+    public String getTareasPorPrioridad() {
+        ArrayList<Tarea> tareasOrdenadas = new ArrayList<Tarea>();
+        for (Tarea tarea: tareas) {
+            tareasOrdenadas.add(tarea);
+        }
+        String ArrayOrdenadoPorPrioridad = "";
+        for (int i = 0; i<tareasOrdenadas.size()-1; i++) {
+            int posTarea = 0;
+            int prioridadMinima = 6;
+            for (int j = i; j<tareasOrdenadas.size(); j++){
+                if(tareasOrdenadas.get(j).getPrioridad() < prioridadMinima) {
+                    prioridadMinima = tareasOrdenadas.get(j).getPrioridad();
+                    posTarea = j;
+                }
+            }
+            Tarea tareaTemp = tareasOrdenadas.get(posTarea);
+            tareasOrdenadas.set(posTarea, tareasOrdenadas.get(i));
+            tareasOrdenadas.set(i, tareaTemp);
+        }
+        for (int i = 0; i < tareas.size(); i++) {
+            ArrayOrdenadoPorPrioridad += tareasOrdenadas.get(i).getNombreDeTarea() + " " + tareasOrdenadas.get(i).getPrioridad() + "\n";
+        }
+        return ArrayOrdenadoPorPrioridad;
+    }
+        /**
+     * 38. Devuelve todas las tareas, una en cada linea, indicando su posición y
+     * la fecha de vecimiento en formato DD/MM/YYYY. Por ejemplo, una tarea se mostraría
+     * "1. Hacer la cama - 21/01/2019"; si no hay fecha de vencimiento la ultima 
+     * parte no se muestra; si no hay tareas devuelve la cadena vacia
+     */  
+    public String getListaTareasConFechaVencimiento() {
+        String tareasConVencimiento = "";
+        int contador = 1;
+        for (Tarea tarea: tareas) {
+            tareasConVencimiento += contador + ". " + tarea.getNombreDeTarea();
+            if (tarea.fechaExists()) {
+                tareasConVencimiento += " - " + tarea.getFechaVenc();
+            }
+            tareasConVencimiento += "\n";
+            contador++;
+        }
+        return tareasConVencimiento;
+    }    
+    public boolean fijarFechaTope(int posicion, int dia, int mes, int anyo) {
+        boolean success = false;
+        if (posicion >= 1 && posicion <= tareas.size() && dia >= 0 && mes >= 0 && anyo >= 0){
+            tareas.get(posicion-1).setFechaVenc(dia, mes, anyo);
+            success = true;
+        }
+        return success;
+    }
 }
